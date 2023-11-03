@@ -11,15 +11,12 @@ import java.net.http.HttpResponse;
 public class LocationService {
 
 //  EXPIRES 2023-11-16
-    private final String weatherApiKey = "cdd91e24ddc04644940162408230211";
+    private final String weatherApiKey = "885f0710ddmsh848a7201276366dp166bd8jsn6af8aeda1640";
 
 
-    public void fetchMe() throws IOException, InterruptedException {
-
-        String hostIp = InetAddress.getLocalHost().getHostAddress();
-
+    private void fetchMyIp() throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("https://weatherapi-com.p.rapidapi.com/ip.json?q="+hostIp))
+                .uri(URI.create("https://weatherapi-com.p.rapidapi.com/ip.json?q=auto%3Aip"))
                 .header("X-RapidAPI-Key", weatherApiKey)
                 .header("X-RapidAPI-Host", "weatherapi-com.p.rapidapi.com")
                 .method("GET", HttpRequest.BodyPublishers.noBody())
@@ -28,5 +25,20 @@ public class LocationService {
         System.out.println(response.body());
     }
 
+    private String fetchMyTimezone() throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("https://weatherapi-com.p.rapidapi.com/timezone.json?q=auto%3Aip"))
+                .header("X-RapidAPI-Key", weatherApiKey)
+                .header("X-RapidAPI-Host", "weatherapi-com.p.rapidapi.com")
+                .method("GET", HttpRequest.BodyPublishers.noBody())
+                .build();
+        HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+        return response.body();
+    }
+
+    public void locationRunner() throws IOException, InterruptedException {
+        fetchMyIp();
+//        fetchMyTimezone();
+    }
 
 }
